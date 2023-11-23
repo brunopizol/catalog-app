@@ -1,26 +1,36 @@
+// App.tsx
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Container } from '@mui/material';
+import { CartProvider } from './CartContext';
+import MenuBar from './MenuBar';
+import ProductGrid from './ProductGrid';
+import Checkout from './Checkout'; // Importe o componente de Checkout
 
-function App() {
+const Home: React.FC = () => (
+  <>
+    <div>Home Page</div>
+    <ProductGrid />
+  </>
+);
+
+const Cart: React.FC = () => <div>Cart Page</div>;
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <CartProvider>
+        <MenuBar />
+        <Container>
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/cart" component={Cart} />
+            <Route path="/checkout/:productId" component={Checkout} />
+          </Switch>
+        </Container>
+      </CartProvider>
+    </Router>
   );
-}
+};
 
 export default App;
