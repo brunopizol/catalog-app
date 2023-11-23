@@ -1,10 +1,12 @@
-// Checkout.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Product } from '../types/Product';
+import { useCart } from '../context/CartContext';
+import { CartItem } from '../types/Cart';
 
 const Checkout: React.FC = () => {
-    const { productId } = useParams<{ productId: string }>();
+    const { productId = '' } = useParams<{ productId?: string }>();
     const [product, setProduct] = useState<Product | null>(null);
     const [cep, setCep] = useState('');
     const [frete, setFrete] = useState(0);
@@ -12,31 +14,34 @@ const Checkout: React.FC = () => {
     const [cardNumber, setCardNumber] = useState('');
     const [pixKey, setPixKey] = useState('');
   
-    // Simulação de um array de produtos
-    const products: Product[] = [
-      {
-        id: 1,
-        title: 'iPhone 9',
-        price: 549,
-        // ... outras propriedades do produto
-      },
-      // Adicione outros produtos conforme necessário
-    ];
-  
+    // Utilize o hook useCart para acessar o estado do carrinho
+    const { state: cartState } = useCart();
+    const { cart: cartItems } = cartState;
     useEffect(() => {
       // Lógica para buscar o produto com o ID fornecido
-      const foundProduct = products.find((p) => p.id === parseInt(productId, 10));
+      const foundProduct = cartItems.find((item) => item.product.id === parseInt(productId, 10));
+
+    if (foundProduct) {
+      setProduct(foundProduct.product);
+    }
+  }, [productId, cartItems]);
   
-      if (foundProduct) {
-        setProduct(foundProduct);
-      }
-    }, [productId, products]);
+  const handleCalculateFrete = () => {
+    // Simulação de um número aleatório entre 0 e 100 para o valor do frete
+    const randomValue = Math.floor(Math.random() * 101);
+    setFrete(randomValue);
+  };
   
-    const handleCalculateFrete = () => {
-      // Lógica para calcular o valor do frete com base no CEP
-      // Atualize o estado de frete
-    };
-  
+  const renderFreteMessage = () => {
+    if (frete !== null) {
+
+        if(frete == 0){
+            return `Frete gratis e prazo de 5 a 10 dias úteis`; 
+        }
+      return `Valor: $${frete} e prazo de 5 a 10 dias úteis`;
+    }
+    return '';
+  };
     const handlePaymentMethodChange = (event: React.ChangeEvent<{ value: unknown }>) => {
       setPaymentMethod(event.target.value as string);
     };
@@ -48,6 +53,14 @@ const Checkout: React.FC = () => {
     return (
       <div>
         <h2>Checkout Page</h2>
+        {cartState.cart.map((cartItem: CartItem) => (
+          <div key={cartItem.product.id}>
+            <Typography variant="h6">{cartItem.product.title}</Typography>
+            <Typography variant="body2">Price: ${cartItem.product.price}</Typography>
+            {/* Adicione outras propriedades do produto conforme necessário */}
+            <Typography variant="body2">Quantity: {cartItem.quantity}</Typography>
+          </div>
+        ))}
         {product && (
           <>
             <Typography variant="h6">{product.title}</Typography>
@@ -55,13 +68,19 @@ const Checkout: React.FC = () => {
             {/* Adicione outras propriedades do produto conforme necessário */}
           </>
         )}
+        <Tooltip
+        title="A implementação de consulta de valores de CEP é fictícia, sendo gerado um número aleatório toda vez que consultado."
+        arrow
+      >
         <TextField
           label="CEP"
           value={cep}
-          onChange={(e) => setCep(e.target.value)}
+          onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setCep(e.target.value)}
           onBlur={handleCalculateFrete}
         />
-        <TextField label="Frete" value={`$${frete}`} disabled />
+      </Tooltip>
+
+        <Typography>{renderFreteMessage()}</Typography>
         <FormControl>
           <InputLabel id="payment-method-label">Payment Method</InputLabel>
           <Select
@@ -78,11 +97,11 @@ const Checkout: React.FC = () => {
           <TextField
             label="Card Number"
             value={cardNumber}
-            onChange={(e) => setCardNumber(e.target.value)}
+            onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setCardNumber(e.target.value)}
           />
         )}
         {paymentMethod === 'pix' && (
-          <TextField label="PIX Key" value={pixKey} onChange={(e) => setPixKey(e.target.value)} />
+          <TextField label="PIX Key" value={pixKey} onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setPixKey(e.target.value)} />
         )}
         <Button variant="contained" color="primary" onClick={handleFinishCheckout}>
           Finish Checkout

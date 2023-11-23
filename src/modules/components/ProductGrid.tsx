@@ -1,11 +1,11 @@
-// ProductGrid.tsx
 import React, { useEffect, useState } from 'react';
 import { Grid, CircularProgress } from '@mui/material';
 import ProductCard from './ProductCard';
+import { Product } from '../types/Product';
 
 const ProductGrid: React.FC = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [products, setProducts] = useState<Product[]>([]);
+const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,12 +30,7 @@ const ProductGrid: React.FC = () => {
     <Grid container spacing={3}>
       {products.map((product) => (
         <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-          <ProductCard
-            id={product.id}
-            title={product.title}
-            price={product.price}
-            image={product.thumbnail}
-          />
+         <ProductCard {...product} />
         </Grid>
       ))}
     </Grid>

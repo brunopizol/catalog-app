@@ -2,10 +2,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Container } from '@mui/material';
-import { CartProvider } from './CartContext';
-import MenuBar from './MenuBar';
-import ProductGrid from './ProductGrid';
-import Checkout from './Checkout'; // Importe o componente de Checkout
+import { CartProvider }from './modules/context/CartContext'
+import MenuBar from './modules/components/MenuBar';
+import ProductGrid from './modules/components/ProductGrid';
+import Checkout from './modules/components/Checkout';
 
 const Home: React.FC = () => (
   <>
@@ -23,9 +23,9 @@ const App: React.FC = () => {
         <MenuBar />
         <Container>
           <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/cart" component={Cart} />
-            <Route path="/checkout/:productId" component={Checkout} />
+            <Route path="/" exact={true}  Component={Home} />
+            <Route path="/cart" Component={Cart} />
+            <Route path="/checkout/:productId" Component={Checkout} />
           </Switch>
         </Container>
       </CartProvider>

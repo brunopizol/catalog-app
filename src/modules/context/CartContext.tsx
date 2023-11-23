@@ -1,13 +1,26 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import { CartAction, CartContextType, CartState } from '../types/Cart';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_TO_CART':
-      return { ...state, cart: [...state.cart, action.payload] };
+      const existingItemIndex = state.cart.findIndex(
+        (item) => item.product.id === action.payload.product.id
+      );
+
+      if (existingItemIndex !== -1) {
+        const updatedCart = [...state.cart];
+        updatedCart[existingItemIndex].quantity += action.payload.quantity;
+        return { ...state, cart: updatedCart };
+      } else {
+        return { ...state, cart: [...state.cart, action.payload] };
+      }
+
     case 'REMOVE_FROM_CART':
-      return { ...state, cart: state.cart.filter(item => item.id !== action.payload) };
+      return { ...state, cart: state.cart.filter((item) => item.product.id !== action.payload) };
+
     default:
       return state;
   }
