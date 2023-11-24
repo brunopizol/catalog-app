@@ -1,36 +1,42 @@
 // App.tsx
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container } from '@mui/material';
-import { CartProvider }from './modules/context/CartContext'
+import { CartProvider } from './modules/context/CartContext';
 import MenuBar from './modules/components/MenuBar';
 import ProductGrid from './modules/components/ProductGrid';
 import Checkout from './modules/components/Checkout';
+import { Product } from './modules/types/Product';
+import HomeWrapper from './modules/components/HomeWrapper';
 
 const Home: React.FC = () => (
   <>
     <div>Home Page</div>
-    <ProductGrid />
+    <HomeWrapper></HomeWrapper>
   </>
 );
 
-const Cart: React.FC = () => <div>Cart Page</div>;
+const Cart: React.FC = () => <div><Checkout></Checkout></div>;
 
 const App: React.FC = () => {
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
   return (
-    <Router>
-      <CartProvider>
-        <MenuBar />
+    <CartProvider>
+      <Router>
+        <MenuBar onSearch={setSearchResults} />
         <Container>
-          <Switch>
-            <Route path="/" exact={true}  Component={Home} />
+          <Routes>
+            <Route path="/" Component={Home} />
             <Route path="/cart" Component={Cart} />
             <Route path="/checkout/:productId" Component={Checkout} />
-          </Switch>
+          </Routes>
         </Container>
-      </CartProvider>
-    </Router>
+      </Router>
+    </CartProvider>
   );
 };
 
 export default App;
+
+
+

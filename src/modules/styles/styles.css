@@ -1,0 +1,61 @@
+/* styles.css */
+
+.appBar {
+    background-color: #1976D2;
+  }
+  
+  .title {
+    flex-grow: 1;
+    display: none;
+  }
+  
+  @media (min-width: 600px) {
+    .title {
+      display: block;
+    }
+  }
+  
+  .search {
+    position: relative;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1); /* Tonalidade mais clara */
+  }
+  
+  .search:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Tonalidade mais clara ao passar o mouse */
+  }
+  
+  .searchIcon {
+    padding: 0 16px;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Ajuste para alinhar à direita */
+  }
+  
+  .inputRoot {
+    color: inherit;
+  }
+  
+  .inputInput {
+    padding: 8px 8px 8px 0;
+    padding-left: calc(1em + 32px);
+    transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    width: 100%;
+  }
+  
+  @media (min-width: 600px) {
+    .inputInput {
+      width: 160px;
+    }
+  }
+  
+  .select {
+    margin-left: 16px; /* Espaçamento entre a barra de pesquisa e o combobox */
+    background-color: rgba(25, 118, 210, 0.7); /* Cor de fundo mais clara */
+    height: 32px; /* Altura ajustada */
+    color: #fff; /* Texto em branco */
+  }
+  

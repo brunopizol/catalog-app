@@ -21,13 +21,15 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     case 'REMOVE_FROM_CART':
       return { ...state, cart: state.cart.filter((item) => item.product.id !== action.payload) };
 
+    case 'SET_SEARCH_RESULTS':
+      return { ...state, searchResults: action.payload };
     default:
       return state;
   }
 };
 
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, { cart: [] });
+  const [state, dispatch] = useReducer(cartReducer, { cart: [], searchResults: []});
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>{children}</CartContext.Provider>
